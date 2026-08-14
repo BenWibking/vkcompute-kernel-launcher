@@ -20,6 +20,24 @@ The key implementation principle is:
 
 > Keep the C++ kernel body as ordinary LLVM IR. Only lower the kernel boundary to the Vulkan shader ABI.
 
+## LLVM 24 implementation notes
+
+The implemented pass follows this architecture with two LLVM-24-specific
+adjustments established by the end-to-end validation tests:
+
+- It emits `llvm.spv.resource.getpointer` for the outer array index (including
+  the interior-pointer element offset), then retains ordinary GEPs only for
+  nested POD fields. A dynamic outer GEP rooted at `getbasepointer` is rejected
+  by LLVM 24's Vulkan logical-pointer access-chain lowering.
+- LLVM creates the descriptor `OpVariable` after the IR pass, so the required
+  conservative `Aliased` decoration is added by the isolated,
+  idempotence-tested `vthomas_spirv_finalize` tool before `spirv-val`.
+
+The compiler pipeline and backend-neutral host ABI are implemented and tested
+on macOS. HIP DMA-BUF import, RADV dispatch, and ACO ISA confirmation still
+require the Linux AMD runtime backend described below; they cannot be exercised
+on the current host.
+
 ---
 
 ## High-level architecture

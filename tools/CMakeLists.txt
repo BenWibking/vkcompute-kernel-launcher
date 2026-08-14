@@ -1,0 +1,3 @@
+add_executable(vthomas_spirv_finalize SpirvFinalize.cpp)
+add_executable(vthomas::spirv_finalize ALIAS vthomas_spirv_finalize)
+target_compile_features(vthomas_spirv_finalize PRIVATE cxx_std_20)

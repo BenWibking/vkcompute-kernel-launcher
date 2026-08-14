@@ -4,6 +4,7 @@ project(VThomas VERSION 0.1.0 LANGUAGES CXX)
 
 option(VTHOMAS_BUILD_LLVM_PLUGIN "Build the LLVM ABI-lowering pass plugin" ON)
 option(VTHOMAS_BUILD_RUNTIME "Build the host runtime library" ON)
+option(VTHOMAS_BUILD_TOOLS "Build VTHOMAS SPIR-V post-processing tools" ON)
 option(VTHOMAS_BUILD_TESTS "Build VTHOMAS tests" ON)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -18,6 +19,10 @@ target_include_directories(vthomas_headers INTERFACE
 
 if(VTHOMAS_BUILD_RUNTIME)
   add_subdirectory(lib/Runtime)
+endif()
+
+if(VTHOMAS_BUILD_TOOLS)
+  add_subdirectory(tools)
 endif()
 
 if(VTHOMAS_BUILD_LLVM_PLUGIN)
@@ -44,4 +49,3 @@ if(VTHOMAS_BUILD_TESTS)
     add_subdirectory(test)
   endif()
 endif()
-
